@@ -15,16 +15,7 @@ name: App iOS
 
 on:
   # push:
-  #   branches: ["beta", "main"]
   #   tags: ["v*"]
-  #   paths:
-  #     - "pwa/**"
-  #     - "ios/**"
-  #     - "package.json"
-  #     - "package-lock.json"
-  #     - "capacitor.config.json"
-  #     - "tools/versione-app.mjs"
-  #     - ".github/workflows/app-ios.yml"
   workflow_dispatch:
 
 permissions:
@@ -80,18 +71,9 @@ jobs:
           name: Tabellone-Baskin-EISI-${{ env.APP_VER }}-ios
           path: out/
 
-      - name: Pre-release app-beta
-        if: github.ref == 'refs/heads/beta'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: app-beta
-          prerelease: true
-          make_latest: false
-          files: out/*.ipa
-
       - name: Release del tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          prerelease: ${{ contains(github.ref_name, 'b') }}
+          prerelease: ${{ contains(github.ref_name, 'a') || contains(github.ref_name, 'b') || contains(github.ref_name, 'RC') }}
           files: out/*

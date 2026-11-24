@@ -7,8 +7,8 @@ android {
         applicationId "io.github.baskinsoftware.tabellonebaskineisi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2601099
-        versionName "26.1"
+        versionCode 260100199
+        versionName "26.1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -29,6 +29,17 @@ android {
             }
         }
     }
+    // Regola di versioning dei progetti Baskin (v3): il build deve rispettare la formula
+    // (((AA*100 + M)*100 + P)*10 + W)*100 + contatore (01-98 pre-release, 99 finale).
+    // I valori sopra restano letterali (F-Droid); li scrive tools/versione-app.mjs.
+    def vn = defaultConfig.versionName
+    def vc = defaultConfig.versionCode
+    def mv = (vn =~ /^(\d{2})\.(\d{1,2})(?:\.(\d{1,2})(?:\.([1-9]))?)?(?:(a|b|RC)(\d{1,2}))?$/)
+    if (!mv.matches()) throw new GradleException("versionName non conforme alla regola di versioning: " + vn)
+    def alto = ((((mv.group(1) as int) * 100 + (mv.group(2) as int)) * 100 + ((mv.group(3) ?: '0') as int)) * 10 + ((mv.group(4) ?: '0') as int)) * 100
+    def cnt = vc - alto
+    if (mv.group(5) ? !(cnt >= 1 && cnt <= 98) : cnt != 99)
+        throw new GradleException("versionCode " + vc + " non coerente con versionName " + vn + " (atteso " + alto + " + contatore " + (mv.group(5) ? "01-98" : "99") + ")")
     buildTypes {
         release {
             if (ksPath) signingConfig signingConfigs.release

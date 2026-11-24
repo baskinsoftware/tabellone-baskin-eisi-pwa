@@ -1,4 +1,4 @@
-# release.yml by Daniele Lolli (UncleDan) feat. Claude AI - Release 1.2 - 2026-11-21 09-55-57
+# release.yml by Daniele Lolli (UncleDan) feat. Claude AI - Release 1.3 - 2026-11-24 23-37-54
 #
 # Crea una release GitHub con lancio manuale (Actions → Release → Run workflow).
 # Regola:
@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
     inputs:
       versione:
-        description: "Versione, senza prefisso (es. 26.1)"
+        description: "Versione, senza prefisso (es. 26.1, 26.0.1, 26.1b2)"
         required: true
         type: string
       ramo:
@@ -37,7 +37,7 @@ on:
         default: "v"
         type: string
       prerelease:
-        description: "Segna come pre-release"
+        description: "Segna come pre-release (automatico per aN, bN, RCN)"
         required: false
         default: false
         type: boolean
@@ -103,6 +103,10 @@ jobs:
           VERSIONE="$(printf '%s' "$VERSIONE" | tr -d '[:space:]')"
           VERSIONE="${VERSIONE#"$PREFISSO"}"   # accetta anche "v26.1"
           [ -n "$VERSIONE" ] || { echo "::error::Versione vuota"; exit 1; }
+          # Regola di versioning Baskin (v3): AA.M[.P[.W]] con eventuale suffisso aN, bN o RCN
+          [[ "$VERSIONE" =~ ^[0-9]{2}\.[0-9]{1,2}(\.[0-9]{1,2}(\.[1-9])?)?((a|b|RC)[0-9]{1,2})?$ ]] \
+            || { echo "::error::Versione non conforme alla regola AA.M[.P[.W]][aN|bN|RCN]: $VERSIONE"; exit 1; }
+          [[ "$VERSIONE" =~ (a|b|RC)[0-9]+$ ]] && PRERELEASE=true   # alpha, beta e RC sono sempre pre-release
           [ -f "$README_PATH" ] || { echo "::error::README non trovato: $README_PATH (ramo $RAMO)"; exit 1; }
 
           TAG="${PREFISSO}${VERSIONE}"

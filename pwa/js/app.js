@@ -5,7 +5,7 @@
    ===================================================================== */
 'use strict';
 
-const APP_VERSION = '26.1';
+const APP_VERSION = '26.1.0.1';
 const STORE_KEY = 'tabellone-baskin-eisi-v1';
 /* app nativa Android/iOS (Capacitor): stesso codice della PWA, vedi js/nativo.js */
 const NATIVO = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
