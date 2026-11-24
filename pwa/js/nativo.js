@@ -1,4 +1,4 @@
-/* nativo.js by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.0.1 - 2026-11-24 23-37-54 */
+/* nativo.js by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.1 - 2026-11-24 23-43-49 */
 /* =====================================================================
    Tabellone Baskin EISI - adattamenti per l'app Android/iOS (Capacitor)
    Nel browser (PWA) questo file non fa nulla. Nell'app nativa:

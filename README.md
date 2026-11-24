@@ -123,7 +123,7 @@ tabellone-baskin-eisi-pwa/
 
 - **Colori**: variabili `--green`, `--red`, `--yellow` in `pwa/css/styles.css`.
 - **Valori predefiniti** (minuti, periodi, timeout, bonus): oggetto `DEFAULT_CONFIG` in `pwa/js/app.js`.
-- **Aggiornamenti**: a ogni rilascio incrementa `CACHE_NAME` in `pwa/service-worker.js` e `APP_VERSION` in `pwa/js/app.js` (regola di versioning comune ai progetti Baskin, v3: formato `AA.M[.P[.W]]` con anno a due cifre, numero progressivo di release dell'anno da 0, patch e W solo per i fix delle app Android/iOS quando la PWA non cambia; le cifre in coda si scrivono solo se servono: `26.0`, `26.0.1`, `26.1`, `26.1.0.1`. Pre-release con suffisso `aN`, `bN` o `RCN`, es. `26.2b1`; tag `v` + versione, i vecchi tag non si rinominano). Se aperta nel browser normale (non installata) si aggiorna da sola al ricaricamento; se installata come PWA non si aggiorna automaticamente (per non interrompere una partita in corso) e l'utente verifica da "Verifica aggiornamenti" nelle impostazioni, disinstallando e reinstallando l'app se ne trova una nuova.
+- **Aggiornamenti**: a ogni rilascio incrementa `CACHE_NAME` in `pwa/service-worker.js` e `APP_VERSION` in `pwa/js/app.js` (regola di versioning comune ai progetti Baskin, v3: formato `AA.M[.P]` con anno a due cifre, numero progressivo di release dell'anno da 0 e patch, scritta solo se serve: `26.0`, `26.0.1`, `26.1`, `26.1.1`. Qui app Android/iOS e PWA hanno un'unica versione, quindi anche una modifica delle sole app o della pubblicazione è una patch; la quarta cifra W della regola serve solo ai wrapper separati come il Cast. Pre-release con suffisso `aN`, `bN` o `RCN`, es. `26.2b1`; tag `v` + versione, i vecchi tag non si rinominano). Se aperta nel browser normale (non installata) si aggiorna da sola al ricaricamento; se installata come PWA non si aggiorna automaticamente (per non interrompere una partita in corso) e l'utente verifica da "Verifica aggiornamenti" nelle impostazioni, disinstallando e reinstallando l'app se ne trova una nuova.
 - **Compatibilità browser datati**: il layout usa `clamp()` per le dimensioni. Ogni dichiarazione ha un fallback fisso che la precede, così su motori privi di `clamp()` (Chrome < 79, WebView di sistema su Android 8/9) l'app resta usabile invece di mostrare loghi/icone a dimensione intrinseca. Mantenere questo schema (valore fisso prima, `clamp()` dopo) quando si aggiunge nuovo CSS dimensionale. Nota: su Chrome < 84 la spaziatura `gap` nei flexbox non è supportata, quindi alcuni elementi possono risultare più ravvicinati (degradazione solo estetica).
 - **Traduzioni**: dizionari in `pwa/js/i18n.js` (oggetto `I18N_DICT`, una chiave per lingua: `it`/`en`/`fr`/`es`/`de`). Per aggiungere una lingua: creare un nuovo blocco con le stesse chiavi di `it`, aggiungere il codice a `I18N_SUPPORTED` e la relativa bandiera in `index.html` (`.lang-flag` con `data-lang`), poi creare la guida corrispondente in `docs/`. Il testo statico in `index.html` usa attributi `data-i18n`/`data-i18n-aria`/`data-i18n-placeholder`; il testo generato dinamicamente in `app.js` usa la funzione `t('chiave', {variabili})`.
 
@@ -333,9 +333,9 @@ npm run ios         # versione + cap sync + apre Xcode
 
 La versione delle app segue `APP_VERSION` (`node tools/versione-app.mjs`), con build
 `(((AA×100 + M)×100 + P)×10 + W)×100 + contatore` (contatore 01–98 per le pre-release,
-99 per la finale): `26.1.0.1` diventa versionName `26.1.0.1` e versionCode `260100199`
-(la `26.1.1` `260101099`, una beta `26.2b1` `260200001`); su iOS la versione visibile
-ha al massimo tre numeri (`26.1.0`) e W va solo nel build. Gradle controlla in build
+99 per la finale): `26.1.1` diventa versionName `26.1.1` e versionCode `260101099`
+(la `26.2` `260200099`, una beta `26.2b1` `260200001`); su iOS versione `26.1.1`,
+build `260101099`. Gradle controlla in build
 che versionCode rispetti la formula. Le app si generano solo dal workflow **Release**
 (lancio manuale, interruttori «App Android» e «App iOS»): nessuna build automatica sui push. Identificativo, uguale su Android e iOS:
 `io.github.baskinsoftware.tabellonebaskineisi`, ricavato dal sito
@@ -372,4 +372,4 @@ Dal menu **…** dell'app è disponibile il link diretto al **repository GitHub*
 ---
 
 **Autore:** Daniele Lolli (UncleDan)  
-**Versione:** 26.1.0.1
+**Versione:** 26.1.1

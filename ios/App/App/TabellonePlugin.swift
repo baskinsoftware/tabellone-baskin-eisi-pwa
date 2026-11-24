@@ -1,4 +1,4 @@
-// TabellonePlugin.swift by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.0.1 - 2026-11-24 23-37-54
+// TabellonePlugin.swift by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.1 - 2026-11-24 23-43-49
 import Capacitor
 import UIKit
 
