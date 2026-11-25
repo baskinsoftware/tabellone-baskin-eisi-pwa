@@ -123,7 +123,7 @@ tabellone-baskin-eisi-pwa/
 
 - **Colori**: variabili `--green`, `--red`, `--yellow` in `pwa/css/styles.css`.
 - **Valori predefiniti** (minuti, periodi, timeout, bonus): oggetto `DEFAULT_CONFIG` in `pwa/js/app.js`.
-- **Aggiornamenti**: a ogni rilascio incrementa `CACHE_NAME` in `pwa/service-worker.js` e `APP_VERSION` in `pwa/js/app.js` (versionamento allineato all'app Android: `versione.sottoversione[.patch]`, con la versione maggiore pari all'anno a due cifre. La patch si indica solo quando c'è: `26.0`, poi `26.0.1` per una correzione, `26.1` per le nuove funzioni, `27.0` per il primo rilascio dell'anno successivo). Se aperta nel browser normale (non installata) si aggiorna da sola al ricaricamento; se installata come PWA non si aggiorna automaticamente (per non interrompere una partita in corso) e l'utente verifica da "Verifica aggiornamenti" nelle impostazioni, disinstallando e reinstallando l'app se ne trova una nuova.
+- **Aggiornamenti**: a ogni rilascio incrementa `CACHE_NAME` in `pwa/service-worker.js` e `APP_VERSION` in `pwa/js/app.js` (regola di versioning comune ai progetti Baskin, v3: formato `AA.M[.P]` con anno a due cifre, numero progressivo di release dell'anno da 0 e patch, scritta solo se serve: `26.0`, `26.0.1`, `26.1`, `26.1.1`. Qui app Android/iOS e PWA hanno un'unica versione, quindi anche una modifica delle sole app o della pubblicazione è una patch; la quarta cifra W della regola serve solo ai wrapper separati come il Cast. Pre-release con suffisso `aN`, `bN` o `RCN`, es. `26.2b1`; tag `v` + versione, i vecchi tag non si rinominano). Se aperta nel browser normale (non installata) si aggiorna da sola al ricaricamento; se installata come PWA non si aggiorna automaticamente (per non interrompere una partita in corso) e l'utente verifica da "Verifica aggiornamenti" nelle impostazioni, disinstallando e reinstallando l'app se ne trova una nuova.
 - **Compatibilità browser datati**: il layout usa `clamp()` per le dimensioni. Ogni dichiarazione ha un fallback fisso che la precede, così su motori privi di `clamp()` (Chrome < 79, WebView di sistema su Android 8/9) l'app resta usabile invece di mostrare loghi/icone a dimensione intrinseca. Mantenere questo schema (valore fisso prima, `clamp()` dopo) quando si aggiunge nuovo CSS dimensionale. Nota: su Chrome < 84 la spaziatura `gap` nei flexbox non è supportata, quindi alcuni elementi possono risultare più ravvicinati (degradazione solo estetica).
 - **Traduzioni**: dizionari in `pwa/js/i18n.js` (oggetto `I18N_DICT`, una chiave per lingua: `it`/`en`/`fr`/`es`/`de`). Per aggiungere una lingua: creare un nuovo blocco con le stesse chiavi di `it`, aggiungere il codice a `I18N_SUPPORTED` e la relativa bandiera in `index.html` (`.lang-flag` con `data-lang`), poi creare la guida corrispondente in `docs/`. Il testo statico in `index.html` usa attributi `data-i18n`/`data-i18n-aria`/`data-i18n-placeholder`; il testo generato dinamicamente in `app.js` usa la funzione `t('chiave', {variabili})`.
 
@@ -304,18 +304,18 @@ nella WebView non funzionano:
 | Piattaforma | Workflow | Risultato |
 |---|---|---|
 | Android | `.github/workflows/app-android.yml` (Linux) | APK debug sempre; APK release firmato se ci sono i secret `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD` |
-| iOS | `.github/workflows/app-ios.yml` (macOS) | `.ipa` **non firmato** e build per Simulatore — **compilazione automatica disattivata** |
+| iOS | `.github/workflows/app-ios.yml` (macOS) | `.ipa` **non firmato** e build per Simulatore |
 
-A ogni push sul ramo `beta` gli APK finiscono nella pre-release **app-beta**
-(sempre la più recente); con un tag `v*` nella release del tag; ogni esecuzione li
-lascia anche tra gli artifact.
+Le app non si compilano più a ogni push: le avvia il workflow **Release** (lancio
+manuale) sul tag che crea, e i file finiscono nella release del tag (pre-release per
+le versioni `a`, `b` e `RC`); ogni esecuzione li lascia anche tra gli artifact.
+Niente più pre-release *app-beta*.
 
-> **iOS, per ora:** senza certificato Apple la compilazione automatica è
-> commentata in `app-ios.yml`; il workflow e il progetto `ios/` restano nel
-> repository e si possono lanciare a mano da *Actions → App iOS → Run workflow*.
-> Per riattivarla basta togliere i commenti dal blocco `push:`.
+> **iOS, per ora:** senza certificato Apple l'interruttore «App iOS» del workflow
+> Release è spento; il workflow e il progetto `ios/` restano nel repository e si
+> possono lanciare anche a mano da *Actions → App iOS → Run workflow*.
 
-- **Android**: dal telefono, apri la pre-release *app-beta* e scarica l'APK
+- **Android**: dal telefono, apri la release e scarica l'APK
   (consenti l'installazione da questa fonte).
 - **iOS**: senza account Apple Developer l'app non si può firmare in automatico.
   L'`.ipa` non firmato si installa con un tool di sideload (Sideloadly, AltStore)
@@ -331,9 +331,13 @@ npm run android     # versione + cap sync + apre Android Studio
 npm run ios         # versione + cap sync + apre Xcode
 ```
 
-La versione delle app segue `APP_VERSION`: `26.1` diventa versionName `26.1`
-e versionCode `2601099` (una beta `26.2b1` `2602001`, la `26.1.1` `2601199`); su iOS
-`26.1.0`, build `2601099`. Identificativo, uguale su Android e iOS:
+La versione delle app segue `APP_VERSION` (`node tools/versione-app.mjs`), con build
+`(((AA×100 + M)×100 + P)×10 + W)×100 + contatore` (contatore 01–98 per le pre-release,
+99 per la finale): `26.1.1` diventa versionName `26.1.1` e versionCode `260101099`
+(la `26.2` `260200099`, una beta `26.2b1` `260200001`); su iOS versione `26.1.1`,
+build `260101099`. Gradle controlla in build
+che versionCode rispetti la formula. Le app si generano solo dal workflow **Release**
+(lancio manuale, interruttori «App Android» e «App iOS»): nessuna build automatica sui push. Identificativo, uguale su Android e iOS:
 `io.github.baskinsoftware.tabellonebaskineisi`, ricavato dal sito
 dell'organizzazione [baskinsoftware.github.io](https://baskinsoftware.github.io/)
 (senza trattini né underscore: l'unica forma valida su entrambe le piattaforme),
@@ -368,4 +372,4 @@ Dal menu **…** dell'app è disponibile il link diretto al **repository GitHub*
 ---
 
 **Autore:** Daniele Lolli (UncleDan)  
-**Versione:** 26.1
+**Versione:** 26.1.1

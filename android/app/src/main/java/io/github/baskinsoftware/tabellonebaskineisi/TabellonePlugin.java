@@ -1,4 +1,4 @@
-// TabellonePlugin.java by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1 - 2026-11-21 08-57-40
+// TabellonePlugin.java by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.1 - 2026-11-24 23-43-49
 package io.github.baskinsoftware.tabellonebaskineisi;
 
 import android.app.Activity;
