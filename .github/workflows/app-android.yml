@@ -44,6 +44,32 @@ jobs:
         with:
           cache-read-only: false
 
+      # Solo in CI: le richieste a Maven Central passano dal mirror pubblico di Google,
+      # che non risponde 429 ai runner condivisi di GitHub. Il progetto non cambia.
+      - name: Mirror di Maven Central per Gradle
+        env:
+          MAVEN_MIRROR: https://maven-central.storage-download.googleapis.com/maven2/
+        run: |
+          mkdir -p "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d"
+          cat > "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/maven-central-mirror.gradle" <<EOF
+          def mirror = '${MAVEN_MIRROR}'
+          def redirect = { repos ->
+            repos.withType(MavenArtifactRepository).configureEach { r ->
+              def u = r.url.toString()
+              if (u.startsWith('https://repo.maven.apache.org/maven2') || u.startsWith('https://repo1.maven.org/maven2')) r.url = mirror
+            }
+          }
+          beforeSettings { s ->
+            redirect(s.pluginManagement.repositories)
+            redirect(s.dependencyResolutionManagement.repositories)
+          }
+          allprojects {
+            redirect(buildscript.repositories)
+            redirect(repositories)
+          }
+          EOF
+          cat "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/maven-central-mirror.gradle"
+
       - name: Dipendenze e versione
         run: |
           npm ci
