@@ -1,4 +1,4 @@
-// versione-app.mjs by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.1 - 2026-11-24 23-43-49
+// versione-app.mjs by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.2 - 2026-11-27 15-04-56
 // Allinea la versione delle app Android e iOS ad APP_VERSION di pwa/js/app.js secondo la
 // "Regola di versioning dei progetti Baskin (v3)":
 //   versione  AA.M[.P[.W]] con eventuale suffisso aN | bN | RCN

@@ -39,14 +39,14 @@ Il Tabellone Baskin EISI esiste in **due repository**, che lavorano insieme:
 
 - **PWA (web)** — repo **[`tabellone-baskin-eisi-pwa`](https://github.com/baskinsoftware/tabellone-baskin-eisi-pwa)** *(questo)*:
   il segnapunti web di questa pagina, installabile e offline.
-- **App Android** — **Tabellone Baskin EISI (Android)**, repo **[`tabellone-baskin-eisi-android`](https://github.com/baskinsoftware/tabellone-baskin-eisi-android)** *(work in progress)*:
+- **App Android** — per il momento è **Tabellone Baskin EISI (Cast)**, repo **[`tabellone-baskin-eisi-cast`](https://github.com/baskinsoftware/tabellone-baskin-eisi-cast)** *(work in progress)*:
   incorpora questa stessa PWA e aggiunge la presentazione su TV (display
   secondario HDMI/Miracast o LAN). Questa PWA, in modalità `?display=1`, fa anche
   da **schermo via browser** per quell'app.
 
 Da questo repository si compilano anche le app **Android e iOS** con le sole
 funzioni della PWA (vedi [App Android e iOS](#app-android-e-ios-sperimentale)):
-sono un'altra cosa rispetto all'app *Tabellone Baskin EISI (Android)*, che
+sono un'altra cosa rispetto all'app *Tabellone Baskin EISI (Cast)*, che
 aggiunge la presentazione su TV.
 
 ---
@@ -158,13 +158,13 @@ lettura, adatta a un secondo schermo o a un TV.
 - In questa modalità l'app **non modifica né salva** la partita: è un puro
   visualizzatore.
 - Lo stato arriva dall'esterno: se la pagina è servita da un web server con
-  endpoint `GET /state` (come nell'app *Tabellone Baskin EISI (Android)*), il display fa
+  endpoint `GET /state` (come nell'app *Tabellone Baskin EISI (Cast)*), il display fa
   **polling** ogni ~0,75 s; il cronometro scorre comunque fluido perché il tempo
   viene fatto avanzare in locale tra un aggiornamento e l'altro.
 - È disponibile anche `window.applyDisplayState(json)` per aggiornare il display
   con un push diretto (usato dal wrapper Android tramite un display secondario).
 
-Questa modalità è la base dell'app **[Tabellone Baskin EISI (Android)](https://github.com/baskinsoftware/tabellone-baskin-eisi-android)**
+Questa modalità è la base dell'app **[Tabellone Baskin EISI (Cast)](https://github.com/baskinsoftware/tabellone-baskin-eisi-cast)**
 (progetto Android separato, **work in progress**) che presenta il tabellone su un
 TV via **display secondario (HDMI/Miracast)** o via **LAN** (browser del TV).
 
@@ -286,6 +286,8 @@ Di conseguenza cambia anche il **significato** dei campi fuori da `config`:
 
 ## App Android e iOS (sperimentale)
 
+> Per il momento l'app Android è **[Tabellone Baskin EISI (Cast)](https://github.com/baskinsoftware/tabellone-baskin-eisi-cast)**.
+
 Dallo stesso repository si compilano anche le app native, con
 [Capacitor](https://capacitorjs.com): impacchettano la cartella `pwa/` così com'è,
 con le stesse funzioni e lo stesso aspetto della PWA. Nell'app nativa
@@ -342,7 +344,7 @@ che versionCode rispetti la formula. Le app si generano solo dal workflow **Rele
 dell'organizzazione [baskinsoftware.github.io](https://baskinsoftware.github.io/)
 (senza trattini né underscore: l'unica forma valida su entrambe le piattaforme),
 diverso da quello dell'app *Tabellone Baskin
-EISI (Android)*, così le due app si possono installare insieme.
+EISI (Cast)*, così le due app si possono installare insieme.
 
 ---
 
@@ -372,4 +374,4 @@ Dal menu **…** dell'app è disponibile il link diretto al **repository GitHub*
 ---
 
 **Autore:** Daniele Lolli (UncleDan)  
-**Versione:** 26.1.1
+**Versione:** 26.1.2
