@@ -1,4 +1,4 @@
-// MainActivity.java by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.1 - 2026-11-24 23-43-49
+// MainActivity.java by Daniele Lolli (UncleDan) feat. Claude AI - Release 26.1.2 - 2026-11-27 15-04-56
 package io.github.baskinsoftware.tabellonebaskineisi;
 
 import android.os.Bundle;
